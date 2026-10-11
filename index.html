@@ -110,20 +110,20 @@
         const nightAlert = document.getElementById("nightAlert");
         const hourlyAlert = document.getElementById("hourlyAlert");
         const calcPlaceholder = document.getElementById("calcPlaceholder");
-        const timeSelect = document.getElementById("time");
+        const timeBox = document.getElementById("time");
         let pointCount = 0;
 
         function generateTimeSlots() {
             const opt = document.createElement("option");
             opt.value = "Ближайшее"; opt.innerText = "Ближайшее время";
-            timeSelect.appendChild(opt);
+            timeBox.appendChild(opt);
             for (let h = 0; h < 24; h++) {
                 for (let m = 0; m < 60; m += 15) {
                     const hh = h < 10 ? "0" + h : h;
                     const mm = m < 10 ? "0" + m : m;
                     const o = document.createElement("option");
                     o.value = hh + ":" + mm; o.innerText = hh + ":" + mm;
-                    timeSelect.appendChild(o);
+                    timeBox.appendChild(o);
                 }
             }
         }
@@ -196,14 +196,18 @@
         }
 
         zoneSelect.addEventListener("change", updateLivePrice);
-        document.getElementById("orderForm").addEventListener("input", updateLivePrice);
-
+        document.getElementById("clientName").addEventListener("input", updateLivePrice);
+        document.getElementById("clientPhone").addEventListener("input", updateLivePrice);
+        document.getElementById("streetA").addEventListener("input", updateLivePrice);
+        document.getElementById("houseA").addEventListener("input", updateLivePrice);
+        document.getElementById("streetB").addEventListener("input", updateLivePrice);
+        document.getElementById("houseB").addEventListener("input", updateLivePrice);
         document.getElementById("orderForm").addEventListener("submit", (e) => {
             e.preventDefault();
             const statusBox = document.getElementById("status");
             statusBox.style.display = "none";
 
-            const extraPoints = [];
+            const extraPoints =;
             pointsContainer.querySelectorAll(".point-block").forEach(b => {
                 const st = b.querySelector(".p-street").value.trim();
                 const hs = b.querySelector(".p-house").value.trim();
@@ -222,7 +226,7 @@
             "🛫 Откуда (А): ул. " + document.getElementById("streetA").value.trim() + ", д. " + document.getElementById("houseA").value.trim() + ", под. " + document.getElementById("entranceA").value.trim() + "\n" +
             (extraPoints.length > 0 ? extraPoints.join("\n") + "\n" : "") +
             "🛬 Куда (Б): ул. " + document.getElementById("streetB").value.trim() + ", д. " + document.getElementById("houseB").value.trim() + ", под. " + document.getElementById("entranceB").value.trim() + "\n" +
-            "⏰ Время подачи: " + timeSelect.value + "\n" +
+            "⏰ Время подачи: " + timeBox.value + "\n" +
             "💬 Комментарий: " + document.getElementById("comment").value.trim() + "\n" +
             "💰 Стоимость: " + total + (zoneSelect.value === "hourly" ? " ₽/час" : " ₽");
 
