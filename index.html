@@ -3,50 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ГОРОДСКОЕ ТАКСИ САРАТОВ-ЭНГЕЛЬС</title>
+    <title>ГОРОДСКОЕ ТАКСИ</title>
     <script src="https://telegram.org"></script>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
-        body { background: #f4f6f8; color: #333; padding: 15px; display: flex; flex-direction: column; align-items: center; }
-        .app-card { background: #ffffff; width: 100%; max-width: 450px; border-radius: 16px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+        body { background: #f4f6f8; padding: 15px; display: flex; flex-direction: column; align-items: center; }
+        .app-card { background: #fff; width: 100%; max-width: 450px; border-radius: 16px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
         .header { text-align: center; margin-bottom: 15px; }
-        .header h1 { font-size: 20px; color: #111; font-weight: 700; }
-        .header p { font-size: 13px; color: #666; margin-top: 4px; }
-        .section-title { font-size: 12px; color: #ff9f00; font-weight: bold; text-transform: uppercase; margin: 15px 0 10px 0; border-bottom: 2px solid #fff9db; padding-bottom: 4px; letter-spacing: 0.5px; }
+        .section-title { font-size: 12px; color: #ff9f00; font-weight: bold; text-transform: uppercase; margin: 15px 0 10px 0; border-bottom: 2px solid #fff9db; padding-bottom: 4px; }
         .form-group { margin-bottom: 12px; }
-        .form-group label { display: block; font-size: 11px; font-weight: 600; color: #555; margin-bottom: 4px; text-transform: uppercase; }
-        select, input { width: 100%; padding: 11px 12px; font-size: 14px; border: 1.5px solid #e2e8f0; border-radius: 10px; background: #fff; outline: none; color: #1a202c; }
-        select:focus, input:focus { border-color: #ffcc00; }
-        .row { display: flex; gap: 8px; }
-        .row .form-group { flex: 1; }
+        .form-group label { display: block; font-size: 11px; font-weight: 600; margin-bottom: 4px; text-transform: uppercase; }
+        select, input { width: 100%; padding: 11px 12px; font-size: 14px; border: 1.5px solid #e2e8f0; border-radius: 10px; }
+        .row { display: flex; gap: 8px; } .row .form-group { flex: 1; }
         .point-block { background: #f8fafc; border: 1px dashed #cbd5e1; padding: 10px; border-radius: 10px; margin-bottom: 10px; position: relative; }
-        .point-block h4 { font-size: 11px; color: #64748b; text-transform: uppercase; margin-bottom: 6px; }
-        .btn-add-point { background: #e2e8f0; color: #334155; border: none; padding: 9px; font-size: 12px; font-weight: 600; border-radius: 8px; cursor: pointer; width: 100%; margin-bottom: 10px; }
-        .btn-remove-point { position: absolute; right: 10px; top: 6px; background: none; border: none; color: #ef4444; font-size: 11px; font-weight: bold; cursor: pointer; }
-        .btn-submit { width: 100%; background: #ffcc00; color: #111; border: none; padding: 14px; font-size: 15px; font-weight: 700; border-radius: 12px; cursor: pointer; box-shadow: 0 4px 6px rgba(255, 204, 0, 0.2); margin-top: 10px; }
-        .status-box { display: none; margin-top: 15px; padding: 15px; border-radius: 12px; text-align: center; font-size: 14px; line-height: 1.5; font-weight: 600; }
-        .status-success { display: block; background: #e6fffa; color: #047481; border: 1px solid #b2f5ea; text-align: left; }
+        .btn-add-point { background: #e2e8f0; border: none; padding: 9px; font-size: 12px; font-weight: 600; border-radius: 8px; width: 100%; margin-bottom: 10px; }
+        .btn-remove-point { position: absolute; right: 10px; top: 6px; background: none; border: none; color: #ef4444; font-weight: bold; }
+        .btn-submit { width: 100%; background: #ffcc00; border: none; padding: 14px; font-size: 15px; font-weight: 700; border-radius: 12px; box-shadow: 0 4px 6px rgba(255, 204, 0, 0.2); }
+        .status-box { display: none; margin-top: 15px; padding: 15px; border-radius: 12px; font-size: 14px; line-height: 1.5; font-weight: 600; background: #e6fffa; color: #047481; border: 1px solid #b2f5ea; }
     </style>
 </head>
 <body>
     <div class="app-card">
-        <div class="header">
-            <h1>🚖 Городское Такси</h1>
-            <p>Саратов ↔ Энгельс • Онлайн Заказ</p>
-        </div>
+        <div class="header"><h2>🚖 Городское Такси</h2><p>Саратов ↔ Энгельс</p></div>
         <form id="orderForm">
             <div class="section-title">Информация о клиенте</div>
-            <div class="form-group">
-                <label>Имя / Название компании</label>
-                <input type="text" id="clientName" placeholder="ООО Газпром" required>
-            </div>
-            <div class="form-group">
-                <label>Контактный телефон</label>
-                <input type="tel" id="clientPhone" placeholder="+7 (999) 123-45-67" required>
-            </div>
+            <div class="form-group"><label>Имя / Компания</label><input type="text" id="clientName" placeholder="ООО Газпром" required></div>
+            <div class="form-group"><label>Телефон</label><input type="tel" id="clientPhone" placeholder="+7 (999) 123-45-67" required></div>
             <div class="section-title">Точка А (Откуда забрать)</div>
-            <div class="form-group">
-                <label>Тарифный план</label>
+            <div class="form-group"><label>Тарифный план</label>
                 <select id="zone" required>
                     <option value="saratov">Внутри Саратова (350 ₽)</option>
                     <option value="engels">Внутри Энгельса (300 ₽)</option>
@@ -55,126 +39,49 @@
                     <option value="suburb">Ближний пригород до 50 км (650 ₽)</option>
                     <option value="distance">Дальнее расстояние до 150 км (4500 ₽)</option>
                     <option value="hourly">Межгород от 150 км (1500 ₽/час)</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Улица подачи</label>
-                <input type="text" id="streetA" placeholder="Улица Точки А" required>
-            </div>
-            <div class="row">
-                <div class="form-group"><label>Дом</label><input type="text" id="houseA" placeholder="7" required></div>
-                <div class="form-group"><label>Подъезд</label><input type="text" id="entranceA" placeholder="1"></div>
-            </div>
-
+                </select></div>
+            <div class="form-group"><label>Улица подачи</label><input type="text" id="streetA" required></div>
+            <div class="row"><div class="form-group"><label>Дом</label><input type="text" id="houseA" required></div>
+            <div class="form-group"><label>Подъезд</label><input type="text" id="entranceA" placeholder="1"></div></div>
             <div class="section-title">Промежуточные остановки (До 3-х точек)</div>
             <div class="points-container" id="pointsContainer"></div>
             <button type="button" class="btn-add-point" id="addPointBtn">+ Добавить адрес остановки</button>
-
             <div class="section-title">Точка Б (Куда доставить)</div>
-            <div class="form-group">
-                <label>Улица назначения</label>
-                <input type="text" id="streetB" placeholder="Улица Точки Б" required>
-            </div>
-            <div class="row">
-                <div class="form-group"><label>Дом</label><input type="text" id="houseB" placeholder="12" required></div>
-                <div class="form-group"><label>Подъезд</label><input type="text" id="entranceB" placeholder="-"></div>
-            </div>
-
+            <div class="form-group"><label>Улица назначения</label><input type="text" id="streetB" required></div>
+            <div class="row"><div class="form-group"><label>Дом</label><input type="text" id="houseB" required></div>
+            <div class="form-group"><label>Подъезд</label><input type="text" id="entranceB" placeholder="-"></div></div>
             <div class="section-title">Детали поездки</div>
-            <div class="form-group">
-                <label>Комментарии к заказу</label>
-                <input type="text" id="comment" placeholder="Инфо для водителя (Укажите Время подачи в скобочках, минимальное время подачи за 1 час)" required>
-            </div>
-
+            <div class="form-group"><label>Комментарии к заказу</label>
+            <input type="text" id="comment" placeholder="Инфо для водителя (Укажите Время подачи в скобочках, минимально за 1 час)" required></div>
             <button type="submit" class="btn-submit">ОТПРАВИТЬ ЗАКАЗ</button>
             <div id="status" class="status-box"></div>
         </form>
     </div>
     <script>
-        const tg = window.Telegram.WebApp;
-        if (tg) { tg.expand(); }
-
-        const zoneSelect = document.getElementById("zone");
+        const tg = window.Telegram.WebApp; if (tg) { tg.expand(); }
         const pointsContainer = document.getElementById("pointsContainer");
-        const addPointBtn = document.getElementById("addPointBtn");
         let pointCount = 0;
-
-        addPointBtn.addEventListener("click", () => {
-            if (pointCount >= 3) { alert("Можно добавить не более 3 дополнительных точек"); return; }
-            pointCount++;
-            const pointBlock = document.createElement('div');
-            pointBlock.className = 'point-block';
-            pointBlock.id = 'pointBlock_' + pointCount;
-            pointBlock.innerHTML = "<h4>Дополнительная точка №" + pointCount + "</h4><button type='button' class='btn-remove-point' onclick='removePointBlock(" + pointCount + ")'>Удалить</button><div class='form-group'><label>Улица</label><input type='text' class='p-street' required></div><div class='row'><div class='form-group'><label>Дом</label><input type='text' class='p-house' required></div><div class='form-group'><label>Подъезд</label><input type='text' class='p-entrance' value='-'></div></div>";
-            pointsContainer.appendChild(pointBlock);
+        document.getElementById("addPointBtn").addEventListener("click", () => {
+            if (pointCount >= 3) { alert("Не более 3 точек"); return; }
+            pointCount++; const b = document.createElement('div'); b.className = 'point-block'; b.id = 'pointBlock_' + pointCount;
+            b.innerHTML = "<h4>Точка №" + pointCount + "</h4><button type='button' class='btn-remove-point' onclick='document.getElementById(\"pointBlock_" + pointCount + "\").remove(); pointCount--;'>Удалить</button><div class='form-group'><label>Улица</label><input type='text' class='p-street' required></div><div class='row'><div class='form-group'><label>Дом</label><input type='text' class='p-house' required></div><div class='form-group'><label>Подъезд</label><input type='text' class='p-entrance' value='-'></div></div>";
+            pointsContainer.appendChild(b);
         });
-
-        window.removePointBlock = function(id) {
-            const block = document.getElementById("pointBlock_" + id);
-            if (block) {
-                block.remove(); pointCount--;
-                const blocks = pointsContainer.querySelectorAll('.point-block');
-                blocks.forEach((b, idx) => { b.querySelector("h4").innerText = "Дополнительная точка №" + (idx + 1); });
-            }
-        };
-
         document.getElementById("orderForm").addEventListener("submit", (e) => {
-            e.preventDefault();
-            const statusBox = document.getElementById("status");
-            statusBox.style.display = "none";
-
-            const extraPoints = [];
-            let filledPointsCount = 0;
+            e.preventDefault(); const statusBox = document.getElementById("status");
+            const extraPoints =; let filled = 0;
             pointsContainer.querySelectorAll(".point-block").forEach(b => {
-                const st = b.querySelector(".p-street").value.trim();
-                const hs = b.querySelector(".p-house").value.trim();
-                const ent = b.querySelector(".p-entrance").value.trim() || "-";
-                if (st && hs) { 
-                    extraPoints.push("🛑 Остановка: " + st + ", д. " + hs + " (п. " + ent + ")");
-                    filledPointsCount++;
-                }
+                const st = b.querySelector(".p-street").value.trim(); const hs = b.querySelector(".p-house").value.trim(); const ent = b.querySelector(".p-entrance").value.trim();
+                if (st && hs) { extraPoints.push("🛑 Остановка: " + st + ", д. " + hs + " (п. " + ent + ")"); filled++; }
             });
-
-            const zone = zoneSelect.value;
-            let base = 350;
-            if (zone === "saratov") base = 350;
-            if (zone === "engels") base = 300;
-            if (zone === "intercity") base = 550;
-            if (zone === "gagarin") base = 1700;
-            if (zone === "suburb") base = 650;
-            if (zone === "distance") base = 4500;
-            if (zone === "hourly") base = 1500;
-
-            const hr = new Date().getHours();
-            const isNight = hr >= 20 || hr < 6;
-            let total = base;
-
-            if (isNight && zone !== "hourly") { total += 50; }
-            if (filledPointsCount > 0 && zone !== "hourly") {
-                total += filledPointsCount * (isNight ? 150 : 100);
-            }
-
-            const zoneText = zoneSelect.options[zoneSelect.selectedIndex].text;
-
-            const orderText =
-            "🚕 НОВЫЙ ЗАКАЗ ИЗ TELEGRAM\n" +
-            "👤 Компания: " + document.getElementById("clientName").value.trim() + "\n" +
-            "📞 Телефон: " + document.getElementById("clientPhone").value.trim() + "\n" +
-            "📋 Тариф: " + zoneText + " (" + (isNight ? "НОЧЬ" : "ДЕНЬ") + ")\n" +
-            "🛫 Откуда (А): ул. " + document.getElementById("streetA").value.trim() + ", д. " + document.getElementById("houseA").value.trim() + ", под. " + document.getElementById("entranceA").value.trim() + "\n" +
-            (extraPoints.length > 0 ? extraPoints.join("\n") + "\n" : "") +
-            "🛬 Куда (Б): ул. " + document.getElementById("streetB").value.trim() + ", д. " + document.getElementById("houseB").value.trim() + ", под. " + document.getElementById("entranceB").value.trim() + "\n" +
-            "💬 Комментарий: " + document.getElementById("comment").value.trim() + "\n" +
-            "💰 Стоимость: " + total + (zone === "hourly" ? " ₽/час" : " ₽");
-
+            const zoneSelect = document.getElementById("zone"); const zone = zoneSelect.value; let base = 350;
+            if (zone === "engels") base = 300; if (zone === "intercity") base = 550; if (zone === "gagarin") base = 1700; if (zone === "suburb") base = 650; if (zone === "distance") base = 4500; if (zone === "hourly") base = 1500;
+            const isNight = new Date().getHours() >= 20 || new Date().getHours() < 6; let total = base;
+            if (isNight && zone !== "hourly") total += 50; if (filled > 0 && zone !== "hourly") total += filled * (isNight ? 150 : 100);
+            const orderText = "🚕 НОВЫЙ ЗАКАЗ ИЗ TELEGRAM\n👤 Компания: " + document.getElementById("clientName").value.trim() + "\n📞 Телефон: " + document.getElementById("clientPhone").value.trim() + "\n📋 Тариф: " + zoneSelect.options[zoneSelect.selectedIndex].text + " (" + (isNight ? "НОЧЬ" : "ДЕНЬ") + ")\n🛫 Откуда (А): ул. " + document.getElementById("streetA").value.trim() + ", д. " + document.getElementById("houseA").value.trim() + ", под. " + document.getElementById("entranceA").value.trim() + "\n" + (extraPoints.length > 0 ? extraPoints.join("\n") + "\n" : "") + "🛬 Куда (Б): ул. " + document.getElementById("streetB").value.trim() + ", д. " + document.getElementById("houseB").value.trim() + ", под. " + document.getElementById("entranceB").value.trim() + "\n" + "💬 Комментарий: " + document.getElementById("comment").value.trim() + "\n" + "💰 Стоимость: " + total + (zone === "hourly" ? " ₽/час" : " ₽");
             if (tg) { tg.sendData(orderText); }
-
             statusBox.innerHTML = "<b>Ваш заказ принят!</b><br>Минимум за 15 минут до подачи мы сообщим вам, какая машина будет вас ожидать.<br>Спасибо, что пользуетесь услугами Городского такси!";
-            statusBox.className = "status-box status-success";
-            statusBox.style.display = "block";
-
-            document.getElementById("orderForm").reset();
-            pointsContainer.innerHTML = ""; pointCount = 0;
+            statusBox.style.display = "block"; document.getElementById("orderForm").reset(); pointsContainer.innerHTML = ""; pointCount = 0;
             setTimeout(() => { if (tg) { tg.close(); } }, 5000);
         });
     </script>
