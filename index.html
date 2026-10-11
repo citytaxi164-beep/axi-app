@@ -135,7 +135,6 @@
                 }
             });
 
-            // Расчет стоимости по ТЗ перед отправкой в чат
             const zone = zoneSelect.value;
             let base = 350;
             if (zone === "saratov") base = 350;
@@ -170,13 +169,13 @@
 
             if (tg) { tg.sendData(orderText); }
 
-            statusBox.innerHTML = "<b>Ваш заказ принят!</b><br>Чуть позже мы сообщим вам номер машины и водителя.<br>Спасибо, что пользуетесь услугами Городского такси!";
+            statusBox.innerHTML = "<b>Ваш заказ принят!</b><br>Минимум за 15 минут до подачи мы сообщим вам, какая машина будет вас ожидать.<br>Спасибо, что пользуетесь услугами Городского такси!";
             statusBox.className = "status-box status-success";
             statusBox.style.display = "block";
 
             document.getElementById("orderForm").reset();
             pointsContainer.innerHTML = ""; pointCount = 0;
-            setTimeout(() => { if (tg) { tg.close(); } }, 4000);
+            setTimeout(() => { if (tg) { tg.close(); } }, 5000);
         });
     </script>
 </body>
