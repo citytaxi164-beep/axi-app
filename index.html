@@ -23,10 +23,7 @@
         .point-block h4 { font-size: 11px; color: #64748b; text-transform: uppercase; margin-bottom: 6px; }
         .btn-add-point { background: #e2e8f0; color: #334155; border: none; padding: 9px; font-size: 12px; font-weight: 600; border-radius: 8px; cursor: pointer; width: 100%; margin-bottom: 10px; }
         .btn-remove-point { position: absolute; right: 10px; top: 6px; background: none; border: none; color: #ef4444; font-size: 11px; font-weight: bold; cursor: pointer; }
-        .price-counter { background: #fff9db; border: 1px solid #ffe066; padding: 14px; border-radius: 10px; margin: 15px 0; text-align: center; }
-        .price-counter span { font-size: 22px; font-weight: bold; color: #f59f00; }
-        .price-counter p { font-size: 11px; color: #666; margin-top: 2px; }
-        .btn-submit { width: 100%; background: #ffcc00; color: #111; border: none; padding: 14px; font-size: 15px; font-weight: 700; border-radius: 12px; cursor: pointer; box-shadow: 0 4px 6px rgba(255, 204, 0, 0.2); }
+        .btn-submit { width: 100%; background: #ffcc00; color: #111; border: none; padding: 14px; font-size: 15px; font-weight: 700; border-radius: 12px; cursor: pointer; box-shadow: 0 4px 6px rgba(255, 204, 0, 0.2); margin-top: 10px; }
         .status-box { display: none; margin-top: 15px; padding: 15px; border-radius: 12px; text-align: center; font-size: 14px; line-height: 1.5; font-weight: 600; }
         .status-success { display: block; background: #e6fffa; color: #047481; border: 1px solid #b2f5ea; text-align: left; }
     </style>
@@ -54,6 +51,7 @@
                     <option value="saratov">Внутри Саратова (350 ₽)</option>
                     <option value="engels">Внутри Энгельса (300 ₽)</option>
                     <option value="intercity">Саратов ↔ Энгельс (550 ₽)</option>
+                    <option value="gagarin">Аэропорт «Гагарин» (1700 ₽)</option>
                     <option value="suburb">Ближний пригород до 50 км (650 ₽)</option>
                     <option value="distance">Дальнее расстояние до 150 км (4500 ₽)</option>
                     <option value="hourly">Межгород от 150 км (1500 ₽/час)</option>
@@ -88,13 +86,6 @@
                 <input type="text" id="comment" placeholder="Инфо для водителя (Укажите Время подачи в скобочках, минимальное время подачи за 1 час)" required>
             </div>
 
-            <div class="price-counter">
-                <p>Стоимость поездки:</p>
-                <span id="livePrice">-</span> <span id="currencySign"></span>
-                <p id="calcPlaceholder" style="color: #888; font-weight: bold;">Заполните контакты и маршрут</p>
-                <p id="nightAlert" style="color: #e03131; font-weight: bold; display: none;">Ночной тариф (+50 ₽)</p>
-                <p id="hourlyAlert" style="color: #4c6ef5; display: none;">*Итоговый расчет по времени: 1500 ₽/час</p>
-            </div>
             <button type="submit" class="btn-submit">ОТПРАВИТЬ ЗАКАЗ</button>
             <div id="status" class="status-box"></div>
         </form>
@@ -106,11 +97,6 @@
         const zoneSelect = document.getElementById("zone");
         const pointsContainer = document.getElementById("pointsContainer");
         const addPointBtn = document.getElementById("addPointBtn");
-        const livePriceSpan = document.getElementById("livePrice");
-        const currencySign = document.getElementById("currencySign");
-        const nightAlert = document.getElementById("nightAlert");
-        const hourlyAlert = document.getElementById("hourlyAlert");
-        const calcPlaceholder = document.getElementById("calcPlaceholder");
         let pointCount = 0;
 
         addPointBtn.addEventListener("click", () => {
@@ -121,9 +107,6 @@
             pointBlock.id = 'pointBlock_' + pointCount;
             pointBlock.innerHTML = "<h4>Дополнительная точка №" + pointCount + "</h4><button type='button' class='btn-remove-point' onclick='removePointBlock(" + pointCount + ")'>Удалить</button><div class='form-group'><label>Улица</label><input type='text' class='p-street' required></div><div class='row'><div class='form-group'><label>Дом</label><input type='text' class='p-house' required></div><div class='form-group'><label>Подъезд</label><input type='text' class='p-entrance' value='-'></div></div>";
             pointsContainer.appendChild(pointBlock);
-            pointBlock.querySelector(".p-street").addEventListener("input", updateLivePrice);
-            pointBlock.querySelector(".p-house").addEventListener("input", updateLivePrice);
-            updateLivePrice();
         });
 
         window.removePointBlock = function(id) {
@@ -132,75 +115,46 @@
                 block.remove(); pointCount--;
                 const blocks = pointsContainer.querySelectorAll('.point-block');
                 blocks.forEach((b, idx) => { b.querySelector("h4").innerText = "Дополнительная точка №" + (idx + 1); });
-                updateLivePrice();
             }
         };
-
-        function updateLivePrice() {
-            const name = document.getElementById("clientName").value.trim();
-            const phone = document.getElementById("clientPhone").value.trim();
-            const strA = document.getElementById("streetA").value.trim();
-            const hsA = document.getElementById("houseA").value.trim();
-            const strB = document.getElementById("streetB").value.trim();
-            const hsB = document.getElementById("houseB").value.trim();
-
-            if (!name || !phone || !strA || !hsA || !strB || !hsB) {
-                livePriceSpan.innerText = "-"; currencySign.innerText = "";
-                calcPlaceholder.style.display = "block"; nightAlert.style.display = "none"; hourlyAlert.style.display = "none";
-                return { total: 0, isNight: false };
-            }
-            calcPlaceholder.style.display = "none";
-
-            const zone = zoneSelect.value;
-            let filledPoints = 0;
-            pointsContainer.querySelectorAll(".point-block").forEach(b => {
-                if(b.querySelector(".p-street").value.trim() !== "" && b.querySelector(".p-house").value.trim() !== "") { filledPoints++; }
-            });
-
-            let base = 350; hourlyAlert.style.display = "none";
-            if (zone === "saratov") base = 350;
-            if (zone === "engels") base = 300;
-            if (zone === "intercity") base = 550;
-            if (zone === "suburb") base = 650;
-            if (zone === "distance") base = 4500;
-            if (zone === "hourly") { base = 1500; hourlyAlert.style.display = "block"; }
-
-            const hr = new Date().getHours();
-            const isNight = hr >= 20 || hr < 6;
-            let total = base;
-
-            if (isNight && zone !== "hourly") { total += 50; nightAlert.style.display = "block"; }
-            else { nightAlert.style.display = "none"; }
-
-            if (filledPoints > 0 && zone !== "hourly") {
-                total += filledPoints * (isNight ? 150 : 100);
-            }
-            livePriceSpan.innerText = total; currencySign.innerText = " ₽";
-            return { total, isNight };
-        }
-
-        zoneSelect.addEventListener("change", updateLivePrice);
-        document.getElementById("clientName").addEventListener("input", updateLivePrice);
-        document.getElementById("clientPhone").addEventListener("input", updateLivePrice);
-        document.getElementById("streetA").addEventListener("input", updateLivePrice);
-        document.getElementById("houseA").addEventListener("input", updateLivePrice);
-        document.getElementById("streetB").addEventListener("input", updateLivePrice);
-        document.getElementById("houseB").addEventListener("input", updateLivePrice);
 
         document.getElementById("orderForm").addEventListener("submit", (e) => {
             e.preventDefault();
             const statusBox = document.getElementById("status");
             statusBox.style.display = "none";
 
-            const extraPoints =;
+            const extraPoints = [];
+            let filledPointsCount = 0;
             pointsContainer.querySelectorAll(".point-block").forEach(b => {
                 const st = b.querySelector(".p-street").value.trim();
                 const hs = b.querySelector(".p-house").value.trim();
                 const ent = b.querySelector(".p-entrance").value.trim() || "-";
-                if (st && hs) { extraPoints.push("🛑 Остановка: " + st + ", д. " + hs + " (п. " + ent + ")"); }
+                if (st && hs) { 
+                    extraPoints.push("🛑 Остановка: " + st + ", д. " + hs + " (п. " + ent + ")");
+                    filledPointsCount++;
+                }
             });
 
-            const { total, isNight } = updateLivePrice();
+            // Расчет стоимости по ТЗ перед отправкой в чат
+            const zone = zoneSelect.value;
+            let base = 350;
+            if (zone === "saratov") base = 350;
+            if (zone === "engels") base = 300;
+            if (zone === "intercity") base = 550;
+            if (zone === "gagarin") base = 1700;
+            if (zone === "suburb") base = 650;
+            if (zone === "distance") base = 4500;
+            if (zone === "hourly") base = 1500;
+
+            const hr = new Date().getHours();
+            const isNight = hr >= 20 || hr < 6;
+            let total = base;
+
+            if (isNight && zone !== "hourly") { total += 50; }
+            if (filledPointsCount > 0 && zone !== "hourly") {
+                total += filledPointsCount * (isNight ? 150 : 100);
+            }
+
             const zoneText = zoneSelect.options[zoneSelect.selectedIndex].text;
 
             const orderText =
@@ -212,7 +166,7 @@
             (extraPoints.length > 0 ? extraPoints.join("\n") + "\n" : "") +
             "🛬 Куда (Б): ул. " + document.getElementById("streetB").value.trim() + ", д. " + document.getElementById("houseB").value.trim() + ", под. " + document.getElementById("entranceB").value.trim() + "\n" +
             "💬 Комментарий: " + document.getElementById("comment").value.trim() + "\n" +
-            "💰 Стоимость: " + total + (zoneSelect.value === "hourly" ? " ₽/час" : " ₽");
+            "💰 Стоимость: " + total + (zone === "hourly" ? " ₽/час" : " ₽");
 
             if (tg) { tg.sendData(orderText); }
 
@@ -221,7 +175,7 @@
             statusBox.style.display = "block";
 
             document.getElementById("orderForm").reset();
-            pointsContainer.innerHTML = ""; pointCount = 0; updateLivePrice();
+            pointsContainer.innerHTML = ""; pointCount = 0;
             setTimeout(() => { if (tg) { tg.close(); } }, 4000);
         });
     </script>
